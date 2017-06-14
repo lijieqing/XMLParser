@@ -21,6 +21,12 @@ public class XMLAPI {
 
     //返回 xmlbean 包下的根目录
 
+    /**
+     * Read xml object.
+     *
+     * @param inputStream the input stream of xml file
+     * @return the object
+     */
     public static Object readXML(InputStream inputStream){
         Element rootElement = null;
         SAXReader reader = new SAXReader();
@@ -48,6 +54,12 @@ public class XMLAPI {
         return root.transform();
     }
 
+
+    /**
+     * Showxmlinfo.
+     *
+     * @param object xml parsed
+     */
     public static void SHOWXMLINFO(Object o){
         Device device = (Device) o;
         RealTimeSet rels = device.getRealTimeSet();
