@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="XMLParse:jar">
+    <output-path>D:/myJar</output-path>
+    <root id="archive" name="XMLParse.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="D:/myJar/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="XMLParse" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/dom4j-1.6.1.jar" path-in-jar="/" />
+      <element id="library" level="project" name="dom4j-1.6.1" />
+    </root>
+  </artifact>
+</component>
