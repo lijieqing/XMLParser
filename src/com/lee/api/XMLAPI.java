@@ -8,8 +8,9 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,54 +55,11 @@ public class XMLAPI {
         return root.transform();
     }
 
-
-    /**
-     * Showxmlinfo.
-     *
-     * @param object xml parsed
-     */
-    public static void SHOWXMLINFO(Object o){
-        Device device = (Device) o;
-        RealTimeSet rels = device.getRealTimeSet();
-        List<RealTimeParam> reals = rels.getRealTimeParams();
-        for (RealTimeParam real : reals) {
-            System.out.println(device.getDevBornDate()+"real RealTimeParam "+real.getName());
-        }
-
-        DataSet dataset = device.getDataSet();
-        List<DSItem> dsitems = dataset.getDsItems();
-        for (DSItem dsitem : dsitems) {
-            System.out.println(device.getDevBornDate()+"dsitem DSItem "+dsitem.getName());
-        }
-
-        J1939 j1939 = device.getJ1939();
-        List<PG> pgs = j1939.getPgs();
-        for (PG pg : pgs) {
-            System.out.println(device.getDevBornDate()+"pg PG "+pg.getPGN());
-            List<SP> sps = pg.getSps();
-            for (SP sp : sps) {
-                System.out.println(device.getDevBornDate()+"--- SP sp "+sp.getSPN());
-            }
-        }
-
-        QCSet qcset = device.getQcSet();
-        List<QCItem> qcitems = qcset.getQcItems();
-        for (QCItem qcitem : qcitems) {
-            System.out.println(device.getDevBornDate()+"--- QCItem qcitem "+qcitem.getName());
-        }
-
-        System.out.println(device);
+    public static void writeObj2Xml(Object object,String path) throws IOException, IllegalAccessException, InvocationTargetException {
+//        InputStream inputStream = new FileInputStream("D:/temp.xml");
+//        Object device =  XMLAPI.readXML(inputStream);
+        XmlGenerate.generate(object,path);
     }
 
-
-    public static void main(String[] args) {
-        try {
-            InputStream inputStream = new FileInputStream("D:/temp.xml");
-            Object o = readXML(inputStream);
-            SHOWXMLINFO(o);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
 }
