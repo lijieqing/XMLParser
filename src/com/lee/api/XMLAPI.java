@@ -61,5 +61,11 @@ public class XMLAPI {
         XmlGenerate.generate(object,path);
     }
 
+    public static void changPackageName(String pacakagename){
+        if (pacakagename != null && !pacakagename.trim().equals("")){
+            Globals.CLASSNAME = pacakagename+".";
+        }
+    }
+
 
 }

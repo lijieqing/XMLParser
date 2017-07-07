@@ -111,6 +111,7 @@ public class XMLHasKids extends XMLBase {
 
 
         } catch (ClassNotFoundException e) {
+            System.out.println("package name is not write");
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
