@@ -1,5 +1,7 @@
 package com.lee.xml;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,5 +55,33 @@ public abstract class XMLBase {
 
     public void setXMLAttributes(List<XMLAttribute> XMLAttributes) {
         this.XMLAttributes = XMLAttributes;
+    }
+
+    protected void valueFormat(String type,Object o,XMLAttribute XMLAttribute,Method method) throws InvocationTargetException, IllegalAccessException {
+        if (type.contains(".String")){
+            method.invoke(o,XMLAttribute.getValues());
+        }else if (type.contains(".Integer")){
+            Integer values;
+            try {
+                values = Integer.valueOf(XMLAttribute.getValues());
+            }catch (NumberFormatException e){
+                e.printStackTrace();
+                values = 0;
+            }
+            method.invoke(o,values);
+        }else if (type.contains(".Float")){
+            Float values;
+            try {
+                values = Float.valueOf(XMLAttribute.getValues());
+            }catch (NumberFormatException e){
+                values = 0.0f;
+                e.printStackTrace();
+            }
+            method.invoke(o,values);
+        }else if(type.contains(".Boolean")){
+            Boolean values;
+            values = Boolean.valueOf(XMLAttribute.getValues());
+            method.invoke(o,values);
+        }
     }
 }

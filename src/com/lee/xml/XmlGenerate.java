@@ -86,7 +86,17 @@ public class XmlGenerate {
                         System.out.println("name"+fild.getName()+" value "+s);
                     }
                 }
-            } else {//子节点 非集合
+            }else if(type.contains(".Boolean")){
+                name = fild.getName();
+                for (Method method : methods) {
+                    String mName = method.getName();
+                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
+                        Boolean s = (Boolean) method.invoke(object);
+                        rootElement.addAttribute(fild.getName(),s+"");
+                        System.out.println("name"+fild.getName()+" value "+s);
+                    }
+                }
+            }else {//子节点 非集合
 
                 name = fild.getGenericType().toString();
                 name = name.substring(name.lastIndexOf(".")+1);
@@ -136,7 +146,7 @@ public class XmlGenerate {
                     if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
                         String s = (String) method.invoke(object);
                         if (s == null)
-                            s = " ";
+                            s = "";
                         root.addAttribute(fild.getName(),s);
                         System.out.println("name"+fild.getName()+" value "+s);
                     }
@@ -160,7 +170,17 @@ public class XmlGenerate {
                         System.out.println("name"+fild.getName()+" value "+s);
                     }
                 }
-            } else if (type.contains(".List")){
+            }else if(type.contains(".Boolean")){
+                name = fild.getName();
+                for (Method method : methods) {
+                    String mName = method.getName();
+                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
+                        Boolean s = (Boolean) method.invoke(object);
+                        root.addAttribute(fild.getName(),s+"");
+                        System.out.println("name"+fild.getName()+" value "+s);
+                    }
+                }
+            }else if (type.contains(".List")){
                 name = fild.getGenericType().toString();
                 name = name.substring(name.lastIndexOf(".")+1,name.length()-1);
                 for (Method method : methods) {

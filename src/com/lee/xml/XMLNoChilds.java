@@ -31,6 +31,7 @@ public class XMLNoChilds extends XMLBase {
         System.out.println("name:"+name+"XMLAttributes:--end");
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public Object transform() {
         String className = Globals.CLASSNAME+this.name;
@@ -52,27 +53,7 @@ public class XMLNoChilds extends XMLBase {
                 for (Method method : methods) {
                     String mName = method.getName().toLowerCase();
                     if (("set"+name).equals(mName)) {
-                        if (type.contains(".String")) {
-                            method.invoke(o, XMLAttribute.getValues());
-                        } else if (type.contains(".Integer")) {
-                            Integer values;
-                            try {
-                                values = Integer.valueOf(XMLAttribute.getValues());
-                            }catch (NumberFormatException num){
-                                num.printStackTrace();
-                                values = 0;
-                            }
-                            method.invoke(o, values);
-                        } else if (type.contains(".Float")) {
-                            Float values;
-                            try {
-                                values = Float.valueOf(XMLAttribute.getValues());
-                            }catch (NumberFormatException num){
-                                num.printStackTrace();
-                                values = 0.0f;
-                            }
-                            method.invoke(o, values);
-                        }
+                        valueFormat(type,o,XMLAttribute,method);
                     }
                 }
             }
