@@ -36,6 +36,7 @@ public abstract class XMLBase {
     public abstract void showKids();
 
     //通过 反射将读取出的xmlbase 实体类转换为 com.lee.xmlbean 优雅 哈哈哈
+    @SuppressWarnings("Duplicates")
     public abstract Object transform();
 
     public String getName() {

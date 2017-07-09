@@ -72,10 +72,36 @@ public class XMLHasKids extends XMLBase {
             //属性操作 把标签属性写入实例中
             for (XMLAttribute XMLAttribute : XMLAttributes) {
                 String name = XMLAttribute.getName().toLowerCase();
+                String type = "";
+                for (Field fild : filds) {
+                    if (fild.getName().toLowerCase().equals(name)){
+                        type = fild.getGenericType().getTypeName();
+                    }
+                }
                 for (Method method : methods) {
                     String mName = method.getName().toLowerCase();
                     if (("set"+name).equals(mName)){
-                        method.invoke(o,XMLAttribute.getValues());
+                        if (type.contains(".String")){
+                            method.invoke(o,XMLAttribute.getValues());
+                        }else if (type.contains(".Integer")){
+                            Integer values;
+                            try {
+                                values = Integer.valueOf(XMLAttribute.getValues());
+                            }catch (NumberFormatException e){
+                                e.printStackTrace();
+                                values = 0;
+                            }
+                            method.invoke(o,values);
+                        }else if (type.contains(".Float")){
+                            Float values;
+                            try {
+                                values = Float.valueOf(XMLAttribute.getValues());
+                            }catch (NumberFormatException e){
+                                values = 0.0f;
+                                e.printStackTrace();
+                            }
+                            method.invoke(o,values);
+                        }
                         break;
                     }
                 }

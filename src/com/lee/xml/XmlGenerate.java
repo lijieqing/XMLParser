@@ -1,15 +1,22 @@
 package com.lee.xml;
 
+import com.lee.api.XMLAPI;
+import com.lee.xmlbean.Book;
+import com.lee.xmlbean.User;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
+
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,7 +67,26 @@ public class XmlGenerate {
                 }
 
 
-            }else {//子节点 非集合
+            }else if (type.contains(".Integer")){
+                name = fild.getName();
+                for (Method method : methods) {
+                    String mName = method.getName();
+                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
+                        Integer s = (Integer) method.invoke(object);
+                        rootElement.addAttribute(fild.getName(),s+"");
+                    }
+                }
+            }else if (type.contains(".Float")){
+                name = fild.getName();
+                for (Method method : methods) {
+                    String mName = method.getName();
+                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
+                        Float s = (Float) method.invoke(object);
+                        rootElement.addAttribute(fild.getName(),s+"");
+                        System.out.println("name"+fild.getName()+" value "+s);
+                    }
+                }
+            } else {//子节点 非集合
 
                 name = fild.getGenericType().toString();
                 name = name.substring(name.lastIndexOf(".")+1);
@@ -115,7 +141,26 @@ public class XmlGenerate {
                         System.out.println("name"+fild.getName()+" value "+s);
                     }
                 }
-            }else if (type.contains(".List")){
+            }else  if (type.contains(".Integer")){
+                name = fild.getName();
+                for (Method method : methods) {
+                    String mName = method.getName();
+                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
+                        Integer s = (Integer) method.invoke(object);
+                        root.addAttribute(fild.getName(),s+"");
+                    }
+                }
+            }else if (type.contains(".Float")){
+                name = fild.getName();
+                for (Method method : methods) {
+                    String mName = method.getName();
+                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
+                        Float s = (Float) method.invoke(object);
+                        root.addAttribute(fild.getName(),s+"");
+                        System.out.println("name"+fild.getName()+" value "+s);
+                    }
+                }
+            } else if (type.contains(".List")){
                 name = fild.getGenericType().toString();
                 name = name.substring(name.lastIndexOf(".")+1,name.length()-1);
                 for (Method method : methods) {
@@ -161,4 +206,6 @@ public class XmlGenerate {
             xmlwriter2.close();
         }
     }
+
 }
+
