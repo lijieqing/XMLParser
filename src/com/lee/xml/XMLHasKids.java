@@ -75,7 +75,7 @@ public class XMLHasKids extends XMLBase {
                 String type = "";
                 for (Field fild : filds) {
                     if (fild.getName().toLowerCase().equals(name)){
-                        type = fild.getGenericType().getTypeName();
+                        type = fild.getGenericType().toString();
                     }
                 }
                 for (Method method : methods) {
