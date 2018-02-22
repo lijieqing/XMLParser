@@ -109,17 +109,19 @@ public class XMLHasKids extends XMLBase {
                         for (XMLBase child : childs) {
                             String childName = child.name.toLowerCase();
                             if (childName.equals(singleNodeName)) {
+                                String singleType = singleNode.nodeType().toString();
+                                child.name = singleType.substring(singleType.lastIndexOf(".") + 1);
                                 fild.set(o, child.transform());
                                 break;
                             }
                         }
                     } else if (listNode != null) {
-                        String name = listNode.nodeType().getName();
-                        name = name.substring(name.lastIndexOf(".") + 1).toLowerCase();
+                        String name = listNode.name().trim().toLowerCase();
                         for (XMLBase child : childs) {
                             String chlName = child.name.toLowerCase();
-                            System.out.println(chlName + "------" + name);
                             if (chlName.equals(name)) {
+                                String listType = listNode.nodeType().toString();
+                                child.name = listType.substring(listType.lastIndexOf(".") + 1);
                                 kids.add(child.transform());
                             }
                         }

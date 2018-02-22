@@ -23,7 +23,7 @@ public class User {
     public String name;
     @XmlAttribute
     public Integer age;
-    @XmlListNode(nodeType = Book.class)
+    @XmlListNode(name = "Knowledge",nodeType = Book.class)
     public List<Book> books;
     @XmlSingleNode(name = "Writer",nodeType = Author.class)
     public Author author;
@@ -88,7 +88,7 @@ public class User {
     @Test
     public void writeUser() throws IllegalAccessException, IOException, InvocationTargetException {
         User user = new User();
-        user.setName("huaLP");
+        user.setName("huaLPpp");
         user.setAge(13);
         List<Book> b1 = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
