@@ -101,6 +101,10 @@ public class XmlGenerate {
                 } else if (type.contains(".List")) {
                     name = field.getGenericType().toString();
                     name = name.substring(name.lastIndexOf(".") + 1, name.length() - 1);
+                    XmlListNode listNode = field.getAnnotation(XmlListNode.class);
+                    if (!"".equals(listNode.name().trim())){
+                        name = listNode.name().trim();
+                    }
                     List list = (List) field.get(object);
                     for (Object o : list) {
                         Element element = rootElement.addElement(name);
