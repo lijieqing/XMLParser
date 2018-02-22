@@ -1,8 +1,11 @@
 package com.lee.xml;
 
+import com.lee.annotation.Ignore;
+import com.lee.annotation.XmlAttribute;
+import com.lee.annotation.XmlBean;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * Created by lijie on 2017/6/7.
@@ -24,36 +27,47 @@ public class XMLNoChilds extends XMLBase {
 
     @Override
     public void showKids() {
-        System.out.println("name:"+name+"XMLAttributes:--start");
+        System.out.println("name:" + name + "XMLAttributes:--start");
         for (XMLAttribute XMLAttribute : XMLAttributes) {
             System.out.print(XMLAttribute);
         }
-        System.out.println("name:"+name+"XMLAttributes:--end");
+        System.out.println("name:" + name + "XMLAttributes:--end");
     }
 
     @SuppressWarnings("Duplicates")
     @Override
     public Object transform() {
-        String className = Globals.CLASSNAME+this.name;
+        String className = Globals.CLASSNAME + this.name;
         Object o = null;
         try {
             Class clazz = Class.forName(className);
             o = clazz.newInstance();
-            Method[] methods = clazz.getDeclaredMethods();
-            Field[] filds = clazz.getDeclaredFields();
-            //属性操作
-            for (XMLAttribute XMLAttribute : XMLAttributes) {
-                String name = XMLAttribute.getName().toLowerCase();
-                String type = "";
-                for (Field fild : filds) {
-                    if (fild.getName().toLowerCase().equals(name)){
-                        type = fild.getGenericType().toString();
-                    }
-                }
-                for (Method method : methods) {
-                    String mName = method.getName().toLowerCase();
-                    if (("set"+name).equals(mName)) {
-                        valueFormat(type,o,XMLAttribute,method);
+            Field[] fileds = clazz.getDeclaredFields();
+            Annotation xmlBean = clazz.getAnnotation(XmlBean.class);
+
+            for (Field filed : fileds) {
+                //当注解不是ignore时
+                Ignore ignore = filed.getAnnotation(Ignore.class);
+                if ((xmlBean!=null&&ignore==null) || (xmlBean==null&&ignore==null)) {
+                    //存在 XmlAttribute注解时进行解析
+                    XmlAttribute attr = filed.getAnnotation(XmlAttribute.class);
+                    //默认属性名为字段名
+                    String attrName = filed.getName().toLowerCase();
+                    if (attr != null) {
+                        //当注解对象中的属性名不是默认值时，为当前属性名赋值
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
+                        }
+                        //遍历属性集合
+                        for (XMLAttribute xmlAttr : XMLAttributes) {
+                            String name = xmlAttr.getName().toLowerCase();
+                            if (attrName.equals(name)) {
+                                String type = filed.getGenericType().toString();
+                                //寻找属性对应的set方法
+                                valueFormat(type, o, xmlAttr, filed);
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -64,10 +78,7 @@ public class XMLNoChilds extends XMLBase {
             e.printStackTrace();
         } catch (InstantiationException e) {
             e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
         }
-
         return o;
     }
 }

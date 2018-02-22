@@ -1,12 +1,17 @@
 package com.lee.xmlbean;
 
+import com.lee.annotation.XmlAttribute;
+
 /**
  * Created by lijie on 2017/7/8.
  */
-public class Book{
-    private String name;
-    private Integer page;
-    private Float price;
+public class Book {
+    @XmlAttribute
+    public String name;
+    @XmlAttribute
+    public Integer page;
+    @XmlAttribute
+    public Float price;
 
     public String getName() {
         return name;
@@ -16,7 +21,7 @@ public class Book{
         this.name = name;
     }
 
-    public Integer getPage() {
+    public int getPage() {
         return page;
     }
 
@@ -24,7 +29,7 @@ public class Book{
         this.page = page;
     }
 
-    public Float getPrice() {
+    public float getPrice() {
         return price;
     }
 

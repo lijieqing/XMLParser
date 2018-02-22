@@ -1,22 +1,18 @@
 package com.lee.xml;
 
-import com.lee.api.XMLAPI;
-import com.lee.xmlbean.Book;
-import com.lee.xmlbean.User;
+import com.lee.annotation.Ignore;
+import com.lee.annotation.XmlAttribute;
+import com.lee.annotation.XmlBean;
+import com.lee.annotation.XmlSingleNode;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,93 +20,108 @@ import java.util.List;
  */
 @SuppressWarnings("Duplicates")
 public class XmlGenerate {
-    private XmlGenerate(){}
-    private static void write(Element rootElement, Object object) throws InvocationTargetException, IllegalAccessException {
+    private XmlGenerate() {
+    }
 
+    private static void write(Element rootElement, Object object) throws IllegalAccessException {
+        String name;
         Class<? extends Object> clazz = object.getClass();
-        Field[] filds = clazz.getDeclaredFields();
-        Method[] methods = clazz.getDeclaredMethods();
-        for (Field fild : filds) {
-            String type = fild.getGenericType().toString();
-            String name;
-            if (type.contains(".List")){//子节点 集合
+        Field[] fields = clazz.getDeclaredFields();
 
-                name = fild.getGenericType().toString();
-                name = name.substring(name.lastIndexOf(".")+1,name.length()-1);
-                for (Method method : methods) {
-                    if (("get"+name.toLowerCase()+"s").equals(method.getName().toLowerCase())){
-                        List list = (List) method.invoke(object);
-                        if (list != null){
-                            for (Object o : list) {
-                                Element element = rootElement.addElement(name);
-                                write(element,o);
-                            }
+        //获取类注解 XmlBean
+        XmlBean xmlBean = clazz.getAnnotation(XmlBean.class);
+
+        for (Field field : fields) {
+            Ignore ignore = field.getAnnotation(Ignore.class);
+            //当属性 不能忽略 或者 注解了XmlBean时
+            if ((xmlBean != null && ignore == null) || (xmlBean == null && ignore == null)) {
+                XmlAttribute attr = field.getAnnotation(XmlAttribute.class);
+
+                String type = field.getGenericType().toString();
+                if (type.contains(".String")) {
+                    String attrName = field.getName();
+                    if (attr != null) {
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
                         }
                     }
-                }
-                System.out.println(fild.getName());
-                System.out.println(fild.getType());
-                System.out.println(fild.getDeclaringClass());
-                System.out.println(fild.getGenericType());
-
-            }else if (type.contains(".String")){//属性
-
-                name = fild.getName();
-                for (Method method : methods) {
-                    String mName = method.getName();
-                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
-                        String s = (String) method.invoke(object);
-                        if (s == null)
-                            s = " ";
-                        rootElement.addAttribute(fild.getName(),s);
-                    }
-                }
-
-
-            }else if (type.contains(".Integer")){
-                name = fild.getName();
-                for (Method method : methods) {
-                    String mName = method.getName();
-                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
-                        Integer s = (Integer) method.invoke(object);
-                        rootElement.addAttribute(fild.getName(),s+"");
-                    }
-                }
-            }else if (type.contains(".Float")){
-                name = fild.getName();
-                for (Method method : methods) {
-                    String mName = method.getName();
-                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
-                        Float s = (Float) method.invoke(object);
-                        rootElement.addAttribute(fild.getName(),s+"");
-                        System.out.println("name"+fild.getName()+" value "+s);
-                    }
-                }
-            }else if(type.contains(".Boolean")){
-                name = fild.getName();
-                for (Method method : methods) {
-                    String mName = method.getName();
-                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
-                        Boolean s = (Boolean) method.invoke(object);
-                        rootElement.addAttribute(fild.getName(),s+"");
-                        System.out.println("name"+fild.getName()+" value "+s);
-                    }
-                }
-            }else {//子节点 非集合
-
-                name = fild.getGenericType().toString();
-                name = name.substring(name.lastIndexOf(".")+1);
-                for (Method method : methods) {
-                    String mName = method.getName();
-                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
-                        Object obj = method.invoke(object);//获得子标签
-                        if (obj!=null){
-                            Element element = rootElement.addElement(name);
-                            write(element,obj);
+                    String value = (String) field.get(object);
+                    rootElement.addAttribute(attrName, value);
+                } else if (type.contains("int")) {
+                    String attrName = field.getName();
+                    if (attr != null) {
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
                         }
                     }
+                    int value = field.getInt(object);
+                    rootElement.addAttribute(attrName, value + "");
+                } else if (type.contains(".Integer")) {
+                    String attrName = field.getName();
+                    if (attr != null) {
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
+                        }
+                    }
+                    int value = (int) field.get(object);
+                    rootElement.addAttribute(attrName, value + "");
+                } else if (type.contains("float")) {
+                    String attrName = field.getName();
+                    if (attr != null) {
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
+                        }
+                    }
+                    float value = field.getFloat(object);
+                    rootElement.addAttribute(attrName, value + "");
+                } else if (type.contains(".Float")) {
+                    String attrName = field.getName();
+                    if (attr != null) {
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
+                        }
+                    }
+                    float value = (float) field.get(object);
+                    rootElement.addAttribute(attrName, value + "");
+                } else if (type.contains("boolean")) {
+                    String attrName = field.getName();
+                    if (attr != null) {
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
+                        }
+                    }
+                    boolean value = field.getBoolean(object);
+                    rootElement.addAttribute(attrName, value + "");
+                } else if (type.contains(".Boolean")) {
+                    String attrName = field.getName();
+                    if (attr != null) {
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
+                        }
+                    }
+                    boolean value = (boolean) field.get(object);
+                    rootElement.addAttribute(attrName, value + "");
+                } else if (type.contains(".List")) {
+                    name = field.getGenericType().toString();
+                    name = name.substring(name.lastIndexOf(".") + 1, name.length() - 1);
+                    List list = (List) field.get(object);
+                    for (Object o : list) {
+                        Element element = rootElement.addElement(name);
+                        write(element, o);
+                    }
+                } else {
+                    name = field.getGenericType().toString();
+                    name = name.substring(name.lastIndexOf(".") + 1);
+                    XmlSingleNode singleNode = field.getAnnotation(XmlSingleNode.class);
+                    if (!"".equals(singleNode.name().trim())){
+                        name = singleNode.name().trim();
+                    }
+                    Object value = field.get(object);
+                    if (value != null) {
+                        Element element = rootElement.addElement(name);
+                        write(element, value);
+                    }
                 }
-
             }
         }
     }
@@ -119,93 +130,114 @@ public class XmlGenerate {
     /**
      * Generate.
      *
-     * @param object 数据源，待转化成xml的实体类
+     * @param object  数据源，待转化成xml的实体类
      * @param DesPath xml文件生成路径
-     * @throws InvocationTargetException the invocation target exception
-     * @throws IllegalAccessException    the illegal access exception
-     * @throws IOException               the io exception
+     * @throws IllegalAccessException the illegal access exception
+     * @throws IOException            the io exception
      */
-    public static void generate(Object object,String DesPath)throws InvocationTargetException, IllegalAccessException, IOException {
+    public static void generate(Object object, String DesPath) throws IllegalAccessException, IOException {
         String name;
         Class<?> clazz = object.getClass();
         String rootname = clazz.getName();
-        rootname = rootname.substring(rootname.lastIndexOf(".")+1);
-        System.out.println(rootname);
-        Field[] filds = clazz.getDeclaredFields();
-        Method[] methods = clazz.getDeclaredMethods();
+        rootname = rootname.substring(rootname.lastIndexOf(".") + 1);
+
+        Field[] fields = clazz.getDeclaredFields();
         Element root = DocumentHelper.createElement(rootname);
         // 创建文档并设置文档的根元素节点
         Document doucment = DocumentHelper.createDocument(root);
 
-        for (Field fild : filds) {
-            String type = fild.getGenericType().toString();
-            if (type.contains(".String")){
-                name = fild.getName();
-                for (Method method : methods) {
-                    String mName = method.getName();
-                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
-                        String s = (String) method.invoke(object);
-                        if (s == null)
-                            s = "";
-                        root.addAttribute(fild.getName(),s);
-                        System.out.println("name"+fild.getName()+" value "+s);
-                    }
-                }
-            }else  if (type.contains(".Integer")){
-                name = fild.getName();
-                for (Method method : methods) {
-                    String mName = method.getName();
-                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
-                        Integer s = (Integer) method.invoke(object);
-                        root.addAttribute(fild.getName(),s+"");
-                    }
-                }
-            }else if (type.contains(".Float")){
-                name = fild.getName();
-                for (Method method : methods) {
-                    String mName = method.getName();
-                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
-                        Float s = (Float) method.invoke(object);
-                        root.addAttribute(fild.getName(),s+"");
-                        System.out.println("name"+fild.getName()+" value "+s);
-                    }
-                }
-            }else if(type.contains(".Boolean")){
-                name = fild.getName();
-                for (Method method : methods) {
-                    String mName = method.getName();
-                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
-                        Boolean s = (Boolean) method.invoke(object);
-                        root.addAttribute(fild.getName(),s+"");
-                        System.out.println("name"+fild.getName()+" value "+s);
-                    }
-                }
-            }else if (type.contains(".List")){
-                name = fild.getGenericType().toString();
-                name = name.substring(name.lastIndexOf(".")+1,name.length()-1);
-                for (Method method : methods) {
-                    if (("get"+name.toLowerCase()+"s").equals(method.getName().toLowerCase())){
-                        List list = (List) method.invoke(object);
-                        for (Object o : list) {
-                            Element element = root.addElement(name);
+        //获取类注解 XmlBean
+        XmlBean xmlBean = clazz.getAnnotation(XmlBean.class);
 
-                            write(element,o);
+        for (Field field : fields) {
+            Ignore ignore = field.getAnnotation(Ignore.class);
+            //当属性 不能忽略 或者 注解了XmlBean时
+            if ((xmlBean != null && ignore == null) || (xmlBean == null && ignore == null)) {
+                XmlAttribute attr = field.getAnnotation(XmlAttribute.class);
+
+                String type = field.getGenericType().toString();
+                if (type.contains(".String")) {
+                    String attrName = field.getName();
+                    if (attr != null) {
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
                         }
                     }
-                }
-            }else {
-                name = fild.getGenericType().toString();
-                name = name.substring(name.lastIndexOf(".")+1);
-                for (Method method : methods) {
-                    String mName = method.getName();
-
-                    if (("get"+name.toLowerCase()).equals(mName.toLowerCase())){
-                        Object obj = method.invoke(object);//获得子标签
-                        if (obj!=null){
-                            Element element = root.addElement(name);
-
-                            write(element,obj);
+                    String value = (String) field.get(object);
+                    root.addAttribute(attrName, value);
+                } else if (type.contains("int")) {
+                    String attrName = field.getName();
+                    if (attr != null) {
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
                         }
+                    }
+                    int value = field.getInt(object);
+                    root.addAttribute(attrName, value + "");
+                } else if (type.contains(".Integer")) {
+                    String attrName = field.getName();
+                    if (attr != null) {
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
+                        }
+                    }
+                    int value = (int) field.get(object);
+                    root.addAttribute(attrName, value + "");
+                } else if (type.contains("float")) {
+                    String attrName = field.getName();
+                    if (attr != null) {
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
+                        }
+                    }
+                    float value = field.getFloat(object);
+                    root.addAttribute(attrName, value + "");
+                } else if (type.contains(".Float")) {
+                    String attrName = field.getName();
+                    if (attr != null) {
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
+                        }
+                    }
+                    float value = (float) field.get(object);
+                    root.addAttribute(attrName, value + "");
+                } else if (type.contains("boolean")) {
+                    String attrName = field.getName();
+                    if (attr != null) {
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
+                        }
+                    }
+                    boolean value = field.getBoolean(object);
+                    root.addAttribute(attrName, value + "");
+                } else if (type.contains(".Boolean")) {
+                    String attrName = field.getName();
+                    if (attr != null) {
+                        if (!"".equals(attr.name().trim())) {
+                            attrName = attr.name();
+                        }
+                    }
+                    boolean value = (boolean) field.get(object);
+                    root.addAttribute(attrName, value + "");
+                } else if (type.contains(".List")) {
+                    name = field.getGenericType().toString();
+                    name = name.substring(name.lastIndexOf(".") + 1, name.length() - 1);
+                    List list = (List) field.get(object);
+                    for (Object o : list) {
+                        Element element = root.addElement(name);
+                        write(element, o);
+                    }
+                } else {
+                    name = field.getGenericType().toString();
+                    name = name.substring(name.lastIndexOf(".") + 1);
+                    XmlSingleNode singleNode = field.getAnnotation(XmlSingleNode.class);
+                    if (!"".equals(singleNode.name().trim())){
+                        name = singleNode.name().trim();
+                    }
+                    Object value = field.get(object);
+                    if (value != null) {
+                        Element element = root.addElement(name);
+                        write(element, value);
                     }
                 }
             }
@@ -220,7 +252,7 @@ public class XmlGenerate {
 
             //添加
             FileOutputStream file = new FileOutputStream(DesPath);
-            XMLWriter xmlwriter2 = new XMLWriter(file,outputFormat);
+            XMLWriter xmlwriter2 = new XMLWriter(file, outputFormat);
             xmlwriter2.write(doucment);
             xmlwriter2.flush();
             xmlwriter2.close();
