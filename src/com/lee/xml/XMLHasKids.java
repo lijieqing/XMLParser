@@ -78,11 +78,10 @@ public class XMLHasKids extends XMLBase {
                     XmlAttribute attr = fild.getAnnotation(XmlAttribute.class);
                     //默认属性名为字段名
                     String attrName = fild.getName().toLowerCase();
+                    String nodeName = fild.getName().toLowerCase();
 
                     //存在XmlSingleNode注解时进行解析
                     XmlSingleNode singleNode = fild.getAnnotation(XmlSingleNode.class);
-                    String singleNodeName = fild.getName().toLowerCase();
-
                     //存在XmlListNode注解时进行解析
                     XmlListNode listNode = fild.getAnnotation(XmlListNode.class);
 
@@ -104,11 +103,11 @@ public class XMLHasKids extends XMLBase {
                         }
                     } else if (singleNode != null) {
                         if (!"".equals(singleNode.name().trim())) {
-                            singleNodeName = singleNode.name().toLowerCase();
+                            nodeName = singleNode.name().toLowerCase();
                         }
                         for (XMLBase child : childs) {
                             String childName = child.name.toLowerCase();
-                            if (childName.equals(singleNodeName)) {
+                            if (childName.equals(nodeName)) {
                                 String singleType = singleNode.nodeType().toString();
                                 child.name = singleType.substring(singleType.lastIndexOf(".") + 1);
                                 fild.set(o, child.transform());
@@ -116,10 +115,13 @@ public class XMLHasKids extends XMLBase {
                             }
                         }
                     } else if (listNode != null) {
-                        String name = listNode.name().trim().toLowerCase();
+                        if (!"".equals(listNode.name().trim())) {
+                            nodeName = listNode.name().toLowerCase();
+                        }
                         for (XMLBase child : childs) {
                             String chlName = child.name.toLowerCase();
-                            if (chlName.equals(name)) {
+
+                            if (chlName.equals(nodeName)) {
                                 String listType = listNode.nodeType().toString();
                                 child.name = listType.substring(listType.lastIndexOf(".") + 1);
                                 kids.add(child.transform());
