@@ -2,6 +2,7 @@ package com.lee.xmlbean;
 
 
 import com.lee.annotation.XmlAttribute;
+import com.lee.annotation.XmlBean;
 
 /**
  * 作者
@@ -9,6 +10,7 @@ import com.lee.annotation.XmlAttribute;
  * @author lijie
  * @create 2018-02-22 20:31
  **/
+@XmlBean
 public class Author {
     @XmlAttribute
     public String name;

@@ -2,7 +2,6 @@ package com.lee.xml;
 
 import com.lee.annotation.*;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,18 +61,21 @@ public class XMLHasKids extends XMLBase {
 
     @Override
     public Object transform() {
-        String className = Globals.CLASSNAME + this.name;
+        String className = Globals.getBeanClass(this.name);
+        if ("".equals(className)) {
+            return null;
+        }
         Object o = null;
         try {
-            Class clazz = Class.forName(className);
+            Class<?> clazz = Class.forName(className);
             o = clazz.newInstance();
             Field[] filds = clazz.getDeclaredFields();
-            Annotation xmlBean = clazz.getAnnotation(XmlBean.class);
+            XmlBean xmlBean = clazz.getAnnotation(XmlBean.class);
 
             for (Field fild : filds) {
                 //当注解不是ignore时
                 Ignore ignore = fild.getAnnotation(Ignore.class);
-                if ((xmlBean!=null&&ignore==null) || (xmlBean==null&&ignore==null)) {
+                if ((xmlBean != null && ignore == null) || (xmlBean == null && ignore == null)) {
                     //存在 XmlAttribute注解时进行解析
                     XmlAttribute attr = fild.getAnnotation(XmlAttribute.class);
                     //默认属性名为字段名

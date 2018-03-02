@@ -70,12 +70,22 @@ public class XMLAPI {
     /**
      * 更改XML标签类的包路径
      *
-     * @param pacakagename
+     * @param packageName 包路径
+     * @deprecated 此方法已过时，建议使用 setXmlBeanScanPackage方法
      */
-    public static void changPackageName(String pacakagename) {
-        if (pacakagename != null && !pacakagename.trim().equals("")) {
-            Globals.CLASSNAME = pacakagename + ".";
-        }
+    public static void changPackageName(String packageName) throws ClassNotFoundException, IOException {
+        Globals.classParse(packageName);
+    }
+
+    /**
+     * 设置XmlBean对象扫描包
+     *
+     * @param packageName 包路径
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public static void setXmlBeanScanPackage(String packageName) throws IOException, ClassNotFoundException {
+        Globals.classParse(packageName);
     }
 
 

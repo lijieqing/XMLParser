@@ -1,10 +1,12 @@
 package com.lee.xmlbean;
 
 import com.lee.annotation.XmlAttribute;
+import com.lee.annotation.XmlBean;
 
 /**
  * Created by lijie on 2017/7/8.
  */
+@XmlBean
 public class Book {
     @XmlAttribute
     public String name;

@@ -1,9 +1,6 @@
 package com.lee.xmlbean;
 
-import com.lee.annotation.Ignore;
-import com.lee.annotation.XmlAttribute;
-import com.lee.annotation.XmlListNode;
-import com.lee.annotation.XmlSingleNode;
+import com.lee.annotation.*;
 import com.lee.api.XMLAPI;
 import org.junit.Test;
 
@@ -18,14 +15,15 @@ import java.util.List;
 /**
  * Created by lijie on 2017/7/8.
  */
+@XmlBean(name = "UserBean")
 public class User {
     @XmlAttribute
     public String name;
     @XmlAttribute
     public Integer age;
-    @XmlListNode(name = "Knowledge",nodeType = Book.class)
+    @XmlListNode(name = "Knowledge", nodeType = Book.class)
     public List<Book> books;
-    @XmlSingleNode(name = "Writer",nodeType = Author.class)
+    @XmlSingleNode(name = "Writer", nodeType = Author.class)
     public Author author;
     @Ignore()
     public Book vip;
@@ -88,7 +86,7 @@ public class User {
     @Test
     public void writeUser() throws IllegalAccessException, IOException, InvocationTargetException {
         User user = new User();
-        user.setName("huaLPpp");
+        user.setName("huaLPppppp");
         user.setAge(13);
         List<Book> b1 = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -111,7 +109,8 @@ public class User {
     }
 
     @Test
-    public void readUser() throws FileNotFoundException {
+    public void readUser() throws IOException, ClassNotFoundException {
+        XMLAPI.setXmlBeanScanPackage("com.lee");
         User object = (User) XMLAPI.readXML(new FileInputStream("/Users/lijie/Desktop/user.xml"));
         System.out.println(object);
     }

@@ -2,9 +2,7 @@ package com.lee.xml;
 
 import com.lee.annotation.Ignore;
 import com.lee.annotation.XmlAttribute;
-import com.lee.annotation.XmlBean;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 /**
@@ -37,18 +35,20 @@ public class XMLNoChilds extends XMLBase {
     @SuppressWarnings("Duplicates")
     @Override
     public Object transform() {
-        String className = Globals.CLASSNAME + this.name;
+        String className = Globals.getBeanClass(this.name);
+        if ("".equals(className)) {
+            return null;
+        }
         Object o = null;
         try {
-            Class clazz = Class.forName(className);
+            Class<?> clazz = Class.forName(className);
             o = clazz.newInstance();
             Field[] fileds = clazz.getDeclaredFields();
-            Annotation xmlBean = clazz.getAnnotation(XmlBean.class);
 
             for (Field filed : fileds) {
                 //当注解不是ignore时
                 Ignore ignore = filed.getAnnotation(Ignore.class);
-                if ((xmlBean!=null&&ignore==null) || (xmlBean==null&&ignore==null)) {
+                if (ignore == null) {
                     //存在 XmlAttribute注解时进行解析
                     XmlAttribute attr = filed.getAnnotation(XmlAttribute.class);
                     //默认属性名为字段名
