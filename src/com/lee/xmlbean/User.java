@@ -94,6 +94,7 @@ public class User {
             book.setName("bookFF" + i);
             book.setPage(87 + i * 3);
             book.setPrice((float) (37.5 + i));
+            book.setPublishier(new Publisher("中国出版社"));
             b1.add(book);
         }
         user.setBooks(b1);

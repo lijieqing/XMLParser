@@ -90,7 +90,7 @@ public class XMLHasKids extends XMLBase {
                     if (attr != null) {
                         //当注解对象中的属性名不是默认值时，为当前属性名赋值
                         if (!"".equals(attr.name().trim())) {
-                            attrName = attr.name();
+                            attrName = attr.name().toLowerCase();
                         }
                         //遍历属性集合
                         for (XMLAttribute xmlAttr : XMLAttributes) {
@@ -105,27 +105,23 @@ public class XMLHasKids extends XMLBase {
                         }
                     } else if (singleNode != null) {
                         if (!"".equals(singleNode.name().trim())) {
-                            nodeName = singleNode.name().toLowerCase();
+                            nodeName = singleNode.name().trim();
+                        }else {
+                            nodeName = fild.getName();
                         }
                         for (XMLBase child : childs) {
-                            String childName = child.name.toLowerCase();
+                            String childName = child.name;
                             if (childName.equals(nodeName)) {
-                                String singleType = singleNode.nodeType().toString();
-                                child.name = singleType.substring(singleType.lastIndexOf(".") + 1);
                                 fild.set(o, child.transform());
                                 break;
                             }
                         }
                     } else if (listNode != null) {
-                        if (!"".equals(listNode.name().trim())) {
-                            nodeName = listNode.name().toLowerCase();
-                        }
+                        nodeName = listNode.name().trim();
                         for (XMLBase child : childs) {
-                            String chlName = child.name.toLowerCase();
+                            String chlName = child.name;
 
                             if (chlName.equals(nodeName)) {
-                                String listType = listNode.nodeType().toString();
-                                child.name = listType.substring(listType.lastIndexOf(".") + 1);
                                 kids.add(child.transform());
                             }
                         }

@@ -10,7 +10,7 @@ import com.lee.annotation.XmlBean;
  * @author lijie
  * @create 2018-02-22 20:31
  **/
-@XmlBean
+@XmlBean(name = "Writer")
 public class Author {
     @XmlAttribute
     public String name;

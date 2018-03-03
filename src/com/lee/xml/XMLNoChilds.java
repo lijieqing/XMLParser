@@ -56,7 +56,7 @@ public class XMLNoChilds extends XMLBase {
                     if (attr != null) {
                         //当注解对象中的属性名不是默认值时，为当前属性名赋值
                         if (!"".equals(attr.name().trim())) {
-                            attrName = attr.name();
+                            attrName = attr.name().trim().toLowerCase();
                         }
                         //遍历属性集合
                         for (XMLAttribute xmlAttr : XMLAttributes) {
