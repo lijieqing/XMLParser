@@ -105,10 +105,12 @@ public class XmlGenerate {
                     if (!"".equals(listNode.name().trim())) {
                         name = listNode.name().trim();
                     }
-                    List list = (List) field.get(object);
-                    for (Object o : list) {
-                        Element element = rootElement.addElement(name);
-                        write(element, o);
+                    if(field.get(object) != null){
+                        List list = (List) field.get(object);
+                        for (Object o : list) {
+                            Element element = rootElement.addElement(name);
+                            write(element, o);
+                        }
                     }
                 } else {
                     name = field.getGenericType().toString();
@@ -231,10 +233,12 @@ public class XmlGenerate {
                         if (!"".equals(listNode.name().trim())) {
                             name = listNode.name().trim();
                         }
-                        List list = (List) field.get(object);
-                        for (Object o : list) {
-                            Element element = root.addElement(name);
-                            write(element, o);
+                        if(field.get(object) != null){
+                            List list = (List) field.get(object);
+                            for (Object o : list) {
+                                Element element = root.addElement(name);
+                                write(element, o);
+                            }
                         }
                     } else {
                         name = field.getGenericType().toString();
