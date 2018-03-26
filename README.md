@@ -96,12 +96,13 @@ Book{
 
 ## XMLParser使用详解
 首先介绍使用过程中用到的注解标签
-|标签名|注解对象|作用|属性|
-| ------------- |:-------------:| -----:|-----:| 
-|```@XmlBean```|JAVA类|表示一个XML的标签|name：要操作的XML标签名|
-|```@XmlAttribute```|JAVA类成员基本数据类型和String属性|表示一个XML标签的属性|name：要操作标签的属性名|
-|```@XmlListNode```|JAVA类集合成员属性|表示多个相同子标签的集合|name：要操作标签的子标签名称 nodetype:子标签对应的JAVA类|
-|```@XmlSingleNode```|JAVA类成员对象属性|表示单个子标签|name：要操作标签的子标签名称 nodetype:子标签对应的JAVA类|
+
+|标签名|注解对象|作用|属性| 
+| ------------- |:-------------:| -----:|-----:|  
+|```@XmlBean```|JAVA类|表示一个XML的标签|name：要操作的XML标签名|  
+|```@XmlAttribute```|JAVA类成员基本数据类型和String属性|表示一个XML标签的属性|name：要操作标签的属性名|  
+|```@XmlListNode```|JAVA类集合成员属性|表示多个相同子标签的集合|name：要操作标签的子标签名称 nodetype:子标签对应的JAVA类|  
+|```@XmlSingleNode```|JAVA类成员对象属性|表示单个子标签|name：要操作标签的子标签名称 nodetype:子标签对应的JAVA类|  
 |```@Ignore```|JAVA类成员属性|表示忽略此属性，不去解析和生成|无|
 
 ### 建模
