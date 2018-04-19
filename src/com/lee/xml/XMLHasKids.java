@@ -72,21 +72,22 @@ public class XMLHasKids extends XMLBase {
             Field[] filds = clazz.getDeclaredFields();
             XmlBean xmlBean = clazz.getAnnotation(XmlBean.class);
 
-            for (Field fild : filds) {
+            for (Field field : filds) {
                 //当注解不是ignore时
-                Ignore ignore = fild.getAnnotation(Ignore.class);
+                Ignore ignore = field.getAnnotation(Ignore.class);
                 if ((xmlBean != null && ignore == null) || (xmlBean == null && ignore == null)) {
                     //存在 XmlAttribute注解时进行解析
-                    XmlAttribute attr = fild.getAnnotation(XmlAttribute.class);
+                    XmlAttribute attr = field.getAnnotation(XmlAttribute.class);
                     //默认属性名为字段名
-                    String attrName = fild.getName().toLowerCase();
-                    String nodeName = fild.getName().toLowerCase();
+                    String attrName = field.getName().toLowerCase();
+                    String nodeName = field.getName().toLowerCase();
 
                     //存在XmlSingleNode注解时进行解析
-                    XmlSingleNode singleNode = fild.getAnnotation(XmlSingleNode.class);
+                    XmlSingleNode singleNode = field.getAnnotation(XmlSingleNode.class);
                     //存在XmlListNode注解时进行解析
-                    XmlListNode listNode = fild.getAnnotation(XmlListNode.class);
-
+                    XmlListNode listNode = field.getAnnotation(XmlListNode.class);
+                    //设置跳过 Java 语言检查
+                    field.setAccessible(true);
                     if (attr != null) {
                         //当注解对象中的属性名不是默认值时，为当前属性名赋值
                         if (!"".equals(attr.name().trim())) {
@@ -97,9 +98,9 @@ public class XMLHasKids extends XMLBase {
                             String name = xmlAttr.getName().toLowerCase();
                             System.out.println(name + xmlAttr.getValues());
                             if (attrName.equals(name)) {
-                                String type = fild.getGenericType().toString();
+                                String type = field.getGenericType().toString();
                                 //寻找属性对应的set方法
-                                valueFormat(type, o, xmlAttr, fild);
+                                valueFormat(type, o, xmlAttr, field);
                                 break;
                             }
                         }
@@ -107,12 +108,12 @@ public class XMLHasKids extends XMLBase {
                         if (!"".equals(singleNode.name().trim())) {
                             nodeName = singleNode.name().trim();
                         }else {
-                            nodeName = fild.getName();
+                            nodeName = field.getName();
                         }
                         for (XMLBase child : childs) {
                             String childName = child.name;
                             if (childName.equals(nodeName)) {
-                                fild.set(o, child.transform());
+                                field.set(o, child.transform());
                                 break;
                             }
                         }
@@ -127,7 +128,7 @@ public class XMLHasKids extends XMLBase {
                         }
                         if (kids.size() > 0) {
                             List<Object> value = new ArrayList<>(kids);
-                            fild.set(o, value);
+                            field.set(o, value);
                             kids.clear();
                         }
                     }

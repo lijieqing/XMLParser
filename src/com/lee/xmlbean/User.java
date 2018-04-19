@@ -18,15 +18,15 @@ import java.util.List;
 @XmlBean(name = "UserBean")
 public class User {
     @XmlAttribute
-    public String name;
+    private String name;
     @XmlAttribute
-    public Integer age;
+    private Integer age;
     @XmlListNode(name = "Knowledge", nodeType = Book.class)
-    public List<Book> books;
+    private List<Book> books;
     @XmlSingleNode(name = "Writer", nodeType = Author.class)
-    public Author author;
+    private Author author;
     @Ignore()
-    public Book vip;
+    private Book vip;
 
     public User() {
         books = new ArrayList<>();
@@ -86,8 +86,8 @@ public class User {
     @Test
     public void writeUser() throws IllegalAccessException, IOException, InvocationTargetException {
         User user = new User();
-        user.setName("huaLPppppp");
-        user.setAge(13);
+        user.setName("huaLPpppppqqqqq");
+        user.setAge(23);
         List<Book> b1 = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             Book book = new Book();

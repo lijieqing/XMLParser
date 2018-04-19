@@ -32,6 +32,9 @@ public class XmlGenerate {
             Ignore ignore = field.getAnnotation(Ignore.class);
             //当属性 不能忽略 或者 注解了XmlBean时
             if ((xmlBean != null && ignore == null) || (xmlBean == null && ignore == null)) {
+                //设置跳过 Java 语言检查
+                field.setAccessible(true);
+
                 XmlAttribute attr = field.getAnnotation(XmlAttribute.class);
 
                 String type = field.getGenericType().toString();
@@ -160,6 +163,9 @@ public class XmlGenerate {
                 Ignore ignore = field.getAnnotation(Ignore.class);
                 //当属性 不能忽略 或者 注解了XmlBean时
                 if (ignore == null) {
+                    //设置跳过 Java 语言检查
+                    field.setAccessible(true);
+
                     XmlAttribute attr = field.getAnnotation(XmlAttribute.class);
 
                     String type = field.getGenericType().toString();

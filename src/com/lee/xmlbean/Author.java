@@ -13,7 +13,7 @@ import com.lee.annotation.XmlBean;
 @XmlBean(name = "Writer")
 public class Author {
     @XmlAttribute
-    public String name;
+    private String name;
 
     public Author() {
     }

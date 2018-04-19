@@ -45,14 +45,16 @@ public class XMLNoChilds extends XMLBase {
             o = clazz.newInstance();
             Field[] fileds = clazz.getDeclaredFields();
 
-            for (Field filed : fileds) {
+            for (Field field : fileds) {
                 //当注解不是ignore时
-                Ignore ignore = filed.getAnnotation(Ignore.class);
+                Ignore ignore = field.getAnnotation(Ignore.class);
                 if (ignore == null) {
+                    //设置跳过 Java 语言检查
+                    field.setAccessible(true);
                     //存在 XmlAttribute注解时进行解析
-                    XmlAttribute attr = filed.getAnnotation(XmlAttribute.class);
+                    XmlAttribute attr = field.getAnnotation(XmlAttribute.class);
                     //默认属性名为字段名
-                    String attrName = filed.getName().toLowerCase();
+                    String attrName = field.getName().toLowerCase();
                     if (attr != null) {
                         //当注解对象中的属性名不是默认值时，为当前属性名赋值
                         if (!"".equals(attr.name().trim())) {
@@ -62,9 +64,9 @@ public class XMLNoChilds extends XMLBase {
                         for (XMLAttribute xmlAttr : XMLAttributes) {
                             String name = xmlAttr.getName().toLowerCase();
                             if (attrName.equals(name)) {
-                                String type = filed.getGenericType().toString();
+                                String type = field.getGenericType().toString();
                                 //寻找属性对应的set方法
-                                valueFormat(type, o, xmlAttr, filed);
+                                valueFormat(type, o, xmlAttr, field);
                                 break;
                             }
                         }

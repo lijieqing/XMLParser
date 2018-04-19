@@ -12,7 +12,7 @@ import com.lee.annotation.XmlBean;
 @XmlBean(name = "Publisher")
 public class Publisher {
     @XmlAttribute(name = "PUB")
-    public String pub;
+    private String pub;
 
     public Publisher() {
     }
