@@ -1,6 +1,6 @@
-package com.lee.api;
+package lee.hua.xmlparse.api;
 
-import com.lee.xml.*;
+import lee.hua.xmlparse.xml.*;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;

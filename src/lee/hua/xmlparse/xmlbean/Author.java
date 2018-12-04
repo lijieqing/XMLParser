@@ -1,8 +1,7 @@
-package com.lee.xmlbean;
+package lee.hua.xmlparse.xmlbean;
 
-
-import com.lee.annotation.XmlAttribute;
-import com.lee.annotation.XmlBean;
+import lee.hua.xmlparse.annotation.XmlAttribute;
+import lee.hua.xmlparse.annotation.XmlBean;
 
 /**
  * 作者

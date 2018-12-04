@@ -1,4 +1,4 @@
-package com.lee.xml;
+package lee.hua.xmlparse.xml;
 
 /**
  * Created by lijie on 2017/6/7.

@@ -1,6 +1,4 @@
-package com.lee.xml;
-
-import com.lee.annotation.XmlBean;
+package lee.hua.xmlparse.xml;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +6,8 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+
+import lee.hua.xmlparse.annotation.XmlBean;
 
 /**
  * Created by lijie on 2017/6/14.

@@ -1,6 +1,6 @@
-package com.lee.xml;
+package lee.hua.xmlparse.xml;
 
-import com.lee.annotation.*;
+import lee.hua.xmlparse.annotation.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

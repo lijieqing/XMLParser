@@ -1,4 +1,4 @@
-package com.lee.xml;
+package lee.hua.xmlparse.xml;
 
 import org.dom4j.Attribute;
 import org.dom4j.Element;

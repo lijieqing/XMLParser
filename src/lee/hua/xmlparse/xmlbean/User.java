@@ -1,7 +1,7 @@
-package com.lee.xmlbean;
+package lee.hua.xmlparse.xmlbean;
 
-import com.lee.annotation.*;
-import com.lee.api.XMLAPI;
+import lee.hua.xmlparse.annotation.*;
+import lee.hua.xmlparse.api.XMLAPI;
 import org.junit.Test;
 
 import java.io.FileInputStream;

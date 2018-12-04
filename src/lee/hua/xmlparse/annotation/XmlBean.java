@@ -1,4 +1,4 @@
-package com.lee.annotation;
+package lee.hua.xmlparse.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

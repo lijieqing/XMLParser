@@ -1,7 +1,7 @@
-package com.lee.xml;
+package lee.hua.xmlparse.xml;
 
-import com.lee.annotation.Ignore;
-import com.lee.annotation.XmlAttribute;
+import lee.hua.xmlparse.annotation.Ignore;
+import lee.hua.xmlparse.annotation.XmlAttribute;
 
 import java.lang.reflect.Field;
 

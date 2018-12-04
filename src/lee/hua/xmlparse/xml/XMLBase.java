@@ -1,4 +1,4 @@
-package com.lee.xml;
+package lee.hua.xmlparse.xml;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
